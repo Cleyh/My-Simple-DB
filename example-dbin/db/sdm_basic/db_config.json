@@ -1,0 +1,16 @@
+{
+    "config": {
+        "db_name": "sdm_basic"
+    },
+    "list": [
+        {
+            "name": "staff_list"
+        },
+        {
+            "name": "tag_list"
+        },
+        {
+            "name": "history_result"
+        }
+    ]
+}

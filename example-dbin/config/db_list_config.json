@@ -1,0 +1,37 @@
+{
+    "db": [
+        {
+            "list": [
+                {
+                    "name": "staff_list"
+                },
+                {
+                    "name": "tag_list"
+                },
+                {
+                    "name": "history_result"
+                }
+            ],
+            "name": "sdm_basic"
+        },
+        {
+            "list": [
+                {
+                    "name": "tag_group"
+                },
+                {
+                    "name": "staff_group"
+                }
+            ],
+            "name": "sdm_basic_group"
+        },
+        {
+            "list": [
+                {
+                    "name": "tag_staff"
+                }
+            ],
+            "name": "sdm_fast_query"
+        }
+    ]
+}

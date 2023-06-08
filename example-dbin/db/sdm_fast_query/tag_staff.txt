@@ -1,0 +1,24 @@
+{
+    "config": {
+        "head": "id,name,tag_1,tag_2,tag_3",
+        "name": "tag_staff"
+    },
+    "data":[
+        {
+            "_uid_":"0",
+            "id":"1001",
+            "name":"xiaomin",
+            "tag_1":"1",
+            "tag_2":"1",
+            "tag_3":"0"
+        },
+        {
+            "_uid_":"1",
+            "id":"1002",
+            "name":"xiaohong",
+            "tag_1":"1",
+            "tag_2":"1",
+            "tag_3":"1"
+        }
+    ]
+}

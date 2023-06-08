@@ -1,0 +1,10 @@
+{
+    "config": {
+        "db_name": "sdm_fast_query"
+    },
+    "list": [
+        {
+            "name": "tag_staff"
+        }
+    ]
+}

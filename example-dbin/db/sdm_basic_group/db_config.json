@@ -1,0 +1,13 @@
+{
+    "config": {
+        "db_name": "sdm_basic_group"
+    },
+    "list": [
+        {
+            "name": "tag_group"
+        },
+        {
+            "name": "staff_group"
+        }
+    ]
+}

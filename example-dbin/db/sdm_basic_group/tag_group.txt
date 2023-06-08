@@ -1,0 +1,13 @@
+{
+    "config": {
+        "head": "group_name,default",
+        "name": "tag_group"
+    },
+    "data":[
+        {
+            "_uid_":"0",
+            "group_name":"default",
+            "default":"true"
+        }
+    ]
+}
