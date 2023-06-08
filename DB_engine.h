@@ -13,17 +13,6 @@
 using namespace std;
 using json = nlohmann::json;
 
-namespace DB {
-	enum DataType
-	{
-		INT = 0,
-		CHAR = 1,
-		STRING = 2,
-		FLOAT = 3,
-		BOOL = 4
-	};
-}
-
 /*
 * 列表配置
 *
@@ -89,7 +78,7 @@ public:
 /*
 * 数据库配置
 * 
-* 这里的是数据库的配置信息，包含其基本信息，可以相当于“自述文件”。
+* 这里的是数据库的配置信息，包含其基本信息，程序运行时先读取这个。
 */
 struct DB_CONFIG
 {
@@ -157,7 +146,6 @@ private:
 	//记录数据库拥有的List
 	vector<LIST_CONFIG> _List;
 	//选中操作的List
-	DB_LIST* _sel_List;
 	map<thread::id, DB_LIST*> _ls_map;
 	//数据库属性
 	DB_CONFIG _db_config;

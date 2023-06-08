@@ -12,6 +12,7 @@ using tcp = asio::ip::tcp;
 * 
 * 这是一个数据库的基本信息，仅仅是用来方便程序更快速地调用数据库而已。
 * 作用与“DB_engine.h”里的 LIST_CONFIG 类似
+* 已弃用
 */
 struct sf_DB
 {
@@ -24,7 +25,8 @@ struct sf_DB
 * 程序总设置，总配置
 * 
 * 用英文表示会更准确：General Settings。
-* 主要目的就是存储程序的各种设置，但是现在貌似没什么需要的地方。
+* 主要目的就是存储程序的各种设置
+* 目前还没有使用上。
 */
 struct sf_config
 {
@@ -35,7 +37,7 @@ struct sf_config
 * 管理员设置
 * 
 * 也是 General Settings 的一部分，可以设置多个总管理员，允许不加限制地访问每个数据库。
-* 目前还没有需要。
+* 目前还没有用上。
 */
 struct sf_admin
 {
@@ -53,8 +55,7 @@ class network_server;
 * 先读取配置文件，获取整体的信息（如：有哪些数据库……）
 * 任何再由用户选择要使用的数据库（use_db）,这时候才会对_use_db进行new操作，也就是读取数据库信息了。
 * 接着就是对数据库的相关操作了，其实可以再写一个operate（）函数返回_use_db。
-* 但是这样就代码写起来就不好看了，例如：operate().operate().add_row(...);（其实也没什么关系啦）
-* 所以需要再补充相关的代码封装一下下。
+* 但是这样就代码写起来就不好看了，例如：operate().operate().add_row(...);（其实应该也没什么关系）
 */
 class DB_server
 {
@@ -85,7 +86,8 @@ public:
 	bool del_db(int uid);
 
 public:
-	//query相关
+	//query相关的指令
+
 	vector<string> query_srow(string db_name, string ls_name, int row);
 	vector<string> query_srow(DB_engine& db, int row);
 	vector<string> query_scol(string db_name, string ls_name, int col);

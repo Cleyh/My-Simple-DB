@@ -236,7 +236,7 @@ DB_engine::DB_engine(string DB_path)
 }
 
 DB_engine::DB_engine(DB_CONFIG& db_cf, string DB_path)
-	:_db_path(DB_path), _db_config(db_cf), _sel_List(nullptr)
+	:_db_path(DB_path), _db_config(db_cf)
 {
 }
 
