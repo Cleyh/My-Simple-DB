@@ -17,36 +17,36 @@ This is my programming language design assignment in my first year of university
 **Sys command**
 The use of these instructions requires the database and list to be selected before the operation can be performed, and the `CLOSE` related instruction needs to be called to save after the operation is completed.
 
-`ADD [add_name] [add_head]` Add a table
-`ADD -R [data]/-C [head] [data]` Add a row or column (no data is empty by default) 
+- `ADD [add_name] [add_head]` Add a table
+- `ADD -R [data]/-C [head] [data]` Add a row or column (no data is empty by default) 
 
-`DEL [del_name]` Delete a list
-`DEL -R [row]/-C [col]` Delete an entire row or column
+- `DEL [del_name]` Delete a list
+- `DEL -R [row]/-C [col]` Delete an entire row or column
 
-`INS -R [row] [data]` Insert a row
-`INS -C [col] [head] [data]` Insert a column
+- `INS -R [row] [data]` Insert a row
+- `INS -C [col] [head] [data]` Insert a column
 
-`SET [row] [col] [data]` Set a cell of data
-`SET -R [row] [data]` Set row data
-`SET -C [col] [data] [from] [to]` set the column information from the from row to the to row (if the data length is not enough, then the more is filled as empty), if the to parameter is not set, then it starts from the from, according to the data length.
+- `SET [row] [col] [data]` Set a cell of data
+- `SET -R [row] [data]` Set row data
+- `SET -C [col] [data] [from] [to]` set the column information from the from row to the to row (if the data length is not enough, then the more is filled as empty), if the to parameter is not set, then it starts from the from, according to the data length.
 
-`GET -DB/-LS` Get database or table information
-`GET -R [row]/-C [col]/[row] [col]` Get an entire row/column/cell of data
+- `GET -DB/-LS` Get database or table information
+- `GET -R [row]/-C [col]/[row] [col]` Get an entire row/column/cell of data
 
-`SEL -DB [name]/-LS [name]` Select the database/table 
-`CLOSE -DB/-LS` Close the database/table
-`CLOSE` Close all
+- `SEL -DB [name]/-LS [name]` Select the database/table 
+- `CLOSE -DB/-LS` Close the database/table
+- `CLOSE` Close all
 
-`CREATE [name]` Create database
-` REMOVE [name]` Delete the database
+- `CREATE [name]` Create database
+- ` REMOVE [name]` Delete the database
 
 Example:
-`SEL -DB 0`
-`ADD student "ID", "NAME", "CLASS", "SCORE"`
-`SLE -LS student` (here you can also select by serial number)
-`ADD -R "17", "xiaomin", "19c229", "100"`
-`ADD -C sex "0", "1", "1", "1", "1", "1"`
-`CLOSE`
+- `SEL -DB 0`
+- `ADD student "ID", "NAME", "CLASS", "SCORE"`
+- `SLE -LS student` (here you can also select by serial number)
+- `ADD -R "17", "xiaomin", "19c229", "100"`
+- `ADD -C sex "0", "1", "1", "1", "1", "1"`
+- `CLOSE`
 
 The above will display the content as a command line and will not send data to the client (a "\n" character will be sent).
 
@@ -54,25 +54,19 @@ The above will display the content as a command line and will not send data to t
 
 This type of command is an immediate query operation and does not require database selection or list operation. It is suitable for remote application queries.
 
-`query -get [DB] [LS] -ALL` Query all the data of a table in a library
-`query -info` Get all database information, including database name, list of tables
+- `query -get [DB] [LS] -ALL` Query all the data of a table in a library
+- `query -info` Get all database information, including database name, list of tables
 
+- `query -get [DB] [LS] -R [ROW]` look up a row
+- `query -get [DB] [LS] -Rt [ROW] [ROW]` look up a row to a row
+- `query -get [DB] [LS] -R [ROW] [ROW] [ROW]` ... Look up a certain row and a certain row and a certain row and...
 
+- `query -get [DB] [LS] -C [COW]` look up a column
+- `query -get [DB] [LS] -Ct [COW] [COW]` look up a column to a column
+- `query -get [DB] [LS] -C [COW] [COW] [COW]` ... Checking certain columns (same as row checking)
 
-`query -get [DB] [LS] -R [ROW]` look up a row
-`query -get [DB] [LS] -Rt [ROW] [ROW]` look up a row to a row
-`query -get [DB] [LS] -R [ROW] [ROW] [ROW]` ... Look up a certain row and a certain row and a certain row and...
-
-
-
-`query -get [DB] [LS] -C [COW]` look up a column
-`query -get [DB] [LS] -Ct [COW] [COW]` look up a column to a column
-`query -get [DB] [LS] -C [COW] [COW] [COW]` ... Checking certain columns (same as row checking)
-
-
-
-`query -get [DB] [LS] -Q [head] [string]` Find all rows in a list with string data under the head column
-`query -where [DB] [LS] -Q [head] [string]` Find the row numbers of all rows in a list with string data under the head column
+- `query -get [DB] [LS] -Q [head] [string]` Find all rows in a list with string data under the head column
+- `query -where [DB] [LS] -Q [head] [string]` Find the row numbers of all rows in a list with string data under the head column
 
 The above will return the information in json format.
 
