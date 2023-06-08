@@ -1,0 +1,32 @@
+{
+    "config": {
+        "head": "tagName,description,group,type,value",
+        "name": "tag_list"
+    },
+    "data": [
+        {
+            "_uid_": "0",
+            "group": "default",
+            "description": "测试1",
+            "tagName":"tag_1",
+            "type":"1",
+            "value":"50000"
+        },
+        {
+            "_uid_": "1",
+            "group": "default",
+            "description": "测试2",
+            "tagName":"tag_2",
+            "type":"1",
+            "value":"6000"
+        },
+        {
+            "_uid_": "2",
+            "group": "default",
+            "description": "测试3",
+            "tagName":"tag_3",
+            "type":"0",
+            "value":"100"
+        }
+    ]
+}

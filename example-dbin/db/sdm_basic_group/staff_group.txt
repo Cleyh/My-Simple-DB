@@ -1,0 +1,18 @@
+{
+    "config": {
+        "head": "group_name,default",
+        "name": "staff_group"
+    },
+    "data": [
+        {
+            "_uid_":"0",
+            "group_name": "default",
+            "default": "true"
+        },
+        {
+            "_uid_":"1",
+            "group_name": "senior",
+            "default": "false"
+        }
+    ]
+}

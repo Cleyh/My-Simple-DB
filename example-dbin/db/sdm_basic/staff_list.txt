@@ -1,0 +1,24 @@
+{
+    "config": {
+        "head": "id,psw,name,group,age",
+        "name": "staff_list"
+    },
+    "data": [
+        {
+            "_uid_": "0",
+            "age": "30",
+            "group": "default",
+            "id": "1001",
+            "name": "xiaomin",
+            "psw": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+        },
+        {
+            "_uid_": "1",
+            "age": "25",
+            "group": "default",
+            "id": "1002",
+            "name": "xiaohong",
+            "psw": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+        }
+    ]
+}
