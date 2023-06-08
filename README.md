@@ -1,10 +1,6 @@
 # SimpleDBS
 
------
-
 This is my programming language design assignment in my first year of university. The code is not mature enough, not functional enough, and still has many bugs, even some of the code is written quite irregularly.
-
------
 
 ## Introducing
 
@@ -16,7 +12,6 @@ This is my programming language design assignment in my first year of university
 
 - SimpleDB takes the measure of delayed loading (please allow me to describe it like this). When you run the database, it does not read out all the data immediately, but first gets the basic information about the database, such as the name, the list it contains, and so on. When the user selects a table in a specific database, only then does the program read the data from the table and perform the operation.
 
------
 ## Command
 
 **Sys command**
@@ -81,14 +76,10 @@ This type of command is an immediate query operation and does not require databa
 
 The above will return the information in json format.
 
------
-
 ## How to use it?
 
 This project uses some libraries, namely `nlohmann json`, `boost_asio_1_28_0`.
 When you try to edit or built this project, you should first reference the `nlohmann json`, `boost_asio_1_28_0` and `boost_1_82_0` libraries.
-
------
 
 ## File structure
 
@@ -120,8 +111,6 @@ root
         ├─tag_list.txt
         └─db_config.json
 ```
-
------
 
 ## The data in json format would return
 
@@ -158,7 +147,6 @@ basic format：
 }
 ```
 
------
 ## KNOWING BUGS
 
 - Thread conflicts may occur when multiple users connect.
