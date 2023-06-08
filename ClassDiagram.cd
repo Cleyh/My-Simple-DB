@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Cmd">
+    <Position X="5.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAIAAAAAAAAAECAAQAgEAAA=</HashCode>
+      <FileName>Cmd.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cmd_Factory">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cmd_Factory.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cmd_Query">
+    <Position X="6.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cmd_Query.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Cmd_sys">
+    <Position X="4.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cmd_sys.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DB_LIST" Collapsed="true">
+    <Position X="12.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EIAAAAMQBICKAJQAAAQAAIAAAIgAABAAAAAAAQABIAA=</HashCode>
+      <FileName>DB_engine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DB_engine" Collapsed="true">
+    <Position X="11" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAIQBAABCAAAAYQCAGAAAAQAAAAAFAAAAAIQABAA=</HashCode>
+      <FileName>DB_engine.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DB_server" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="DB_server::network_server" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DB_server.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAEgCAYEAAAQBCoBQAgAIABAAQgSAAAAY=</HashCode>
+      <FileName>DB_server.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="LIST_CONFIG" Collapsed="true">
+    <Position X="12.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAAAAECAAAAAAAAAACIAAAAA=</HashCode>
+      <FileName>DB_engine.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="DB_CONFIG" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAABAAEAEAAAAAAAABAAAAAAAQAAACIAAQAA=</HashCode>
+      <FileName>DB_engine.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sf_DB" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAAAAAEAAAAAAAAAAABAAA=</HashCode>
+      <FileName>DB_server.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sf_config" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DB_server.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="sf_admin" Collapsed="true">
+    <Position X="2.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DB_server.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="SYS_COMMAND" Collapsed="true">
+    <Position X="2.25" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAGAMAAAAAAAAAAQAQIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Cmd_sys.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="DB::DataType" Collapsed="true">
+    <Position X="0.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgBAAAAAAIAAgAAAAAIAAAAAA=</HashCode>
+      <FileName>DB_engine.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Microsoft YaHei UI" Size="9" />
+</ClassDiagram>
