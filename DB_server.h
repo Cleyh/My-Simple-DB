@@ -85,6 +85,9 @@ public:
 	bool new_db(DB_CONFIG& new_db_cf);
 	bool del_db(int uid);
 
+private:
+	bool is_args_right(string db_name, string ls_name);
+
 public:
 	//query相关的指令
 

@@ -209,18 +209,27 @@ bool DB_server::del_db(int uid)
     return true;
 }
 
-vector<string> DB_server::query_srow(string db_name, string ls_name, int row)
+bool DB_server::is_args_right(string db_name, string ls_name)
 {
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return vector<string>();
+
+    if (it == _sf_db.end()) return false;
     else
     {
         auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
             [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return vector<string>();
+        if (it1 == it->_list_.end()) return false;
     }
+    return true;
+}
 
+vector<string> DB_server::query_srow(string db_name, string ls_name, int row)
+{
+    if (!is_args_right) return {};
+
+    auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
+        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
@@ -238,25 +247,20 @@ vector<string> DB_server::query_srow(DB_engine& db, int row)
 
 vector<string> DB_server::query_scol(string db_name, string ls_name, int col)
 {
+    if (!is_args_right) return {};
+
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return vector<string>();
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return vector<string>();
-    }
-
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
+
     db.select_list(ls_name);
 
     if (col >= db.LS_op()->_head.size() || col < 0) return vector<string>();
 
     vector<string> result;
-    result.push_back(db.LS_op()->_head[col]);
+    //result.push_back(db.LS_op()->_head[col]);
 
     for (auto& items : db.LS_op()->_data)
     {
@@ -271,7 +275,7 @@ vector<string> DB_server::query_scol(DB_engine& db, int col)
     if (col >= db.LS_op()->_head.size() || col < 0) return vector<string>();
 
     vector<string> result;
-    result.push_back(db.LS_op()->_head[col]);
+   // result.push_back(db.LS_op()->_head[col]);
 
     for (auto& items : db.LS_op()->_data)
     {
@@ -283,22 +287,17 @@ vector<string> DB_server::query_scol(DB_engine& db, int col)
 
 vector<vector<string>> DB_server::query_rows(string db_name, string ls_name, vector<int>& row)
 {
-    vector<vector<string>> result;
+    if (!is_args_right) return {};
+
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return result;
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return result;
-    }
-
     int id = it - _sf_db.begin();
+
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
 
     db.select_list(ls_name);
+    vector<vector<string>> result;
     result.reserve(row.size());  // 预分配内存
     for (auto& i : row) result.push_back(query_srow(db, i));
     return result;
@@ -306,22 +305,18 @@ vector<vector<string>> DB_server::query_rows(string db_name, string ls_name, vec
 
 vector<vector<string>> DB_server::query_rows(string db_name, string ls_name)
 {
-    vector<vector<string>> result;
+    if (!is_args_right) return {};
+
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return result;
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return result;
-    }
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
 
     db.select_list(ls_name);
     int all = db.ls_ls().size();
+
+    vector<vector<string>> result;
     result.reserve(all);
     for (int i = 0; i < all; i++) result.push_back(query_srow(db, i));
     return result;
@@ -329,23 +324,17 @@ vector<vector<string>> DB_server::query_rows(string db_name, string ls_name)
 
 vector<vector<string>> DB_server::query_cols(string db_name, string ls_name, vector<int>& col)
 {
-    vector<vector<string>> result;
+    if (!is_args_right) return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return result;
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return result;
-    }
 
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
     db.select_list(ls_name);
 
+    vector<vector<string>> result;
     result.reserve(col.size());  // 预分配内存
     for (auto& i : col) result.push_back(query_scol(db, i));
     return result;
@@ -353,16 +342,10 @@ vector<vector<string>> DB_server::query_cols(string db_name, string ls_name, vec
 
 vector<vector<string>> DB_server::query_Q(string db_name, string ls_name, string head, string target)
 {
+    if (!is_args_right) return {};
+
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return {};
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return {};
-    }
-
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
@@ -396,16 +379,10 @@ vector<vector<string>> DB_server::query_Q(string db_name, string ls_name, string
 
 vector<int> DB_server::query_w(string db_name, string ls_name, string head, string target)
 {
+    if (!is_args_right) return {};
+
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return vector<int>();
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return vector<int>();
-    }
-
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
@@ -439,16 +416,10 @@ vector<int> DB_server::query_w(string db_name, string ls_name, string head, stri
 
 vector<string> DB_server::query_head(string db_name, string ls_name)
 {
+    if (!is_args_right) return {};
+
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
         [&](DB_CONFIG& item) { return item.get_name() == db_name; });
-    if (it == _sf_db.end()) return vector<string>();
-    else
-    {
-        auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return vector<string>();
-    }
-
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);

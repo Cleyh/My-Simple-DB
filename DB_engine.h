@@ -44,7 +44,7 @@ public:
 	//表头，记录每一列的名字
 	vector<string> _head;
 	//表头类型，记录每一列应当存储什么类型的数据。PS：目前没有任何判断机制，也就是说你把字符串写到INT里面去都不会有问题。
-	vector<DB::DataType> _type;
+	//vector<DB::DataType> _type;
 	//表格具体数据
 	vector<vector<string>> _data;
 	//这个表存储在硬盘的位置信息

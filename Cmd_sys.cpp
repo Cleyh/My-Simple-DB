@@ -110,15 +110,16 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 	case ADD:
 		if (tokens.size() < 3) {
 			cerr << "参数不完整，请检查你的参数" << endl;
-			//[返回类型],[返回内容]
-			_return = "[error],[\"参数不完整，请检查你的参数\"]";
+			json j = hint_to_json("error", "参数不完整，请检查你的参数", "0");
+			_return = j.dump(-1);
 			break;
 		}
 
 		if (!db.is_use()) 
 		{
 			cerr << "请先选择数据库！" << endl;
-			_return = "[error],[\"请先选择数据库！\"]";
+			json j = hint_to_json("error", "请先选择数据库！", "0");
+			_return = j.dump(-1);
 			break;
 		}
 
@@ -128,12 +129,16 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 			if (!db.DB_op()->is_sel())
 			{
 				cerr << "请先选择表！" << endl;
+				json j = hint_to_json("error", "请先选择表！", "0");
+				_return = j.dump(-1);
 				break;
 			}
 
 			vector<string> arg = split_args(tokens[2]);
 			if (arg.size() <= 0) {
 				cerr << "指令参数错误!" << endl;
+				json j = hint_to_json("error", "指令参数错误!", "1");
+				_return = j.dump(-1);
 				break;
 			}
 			db.DB_op()->LS_op()->add_row(arg);
