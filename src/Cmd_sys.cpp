@@ -1,4 +1,5 @@
-#include "Cmd_sys.h"
+Ôªø#include "Cmd_sys.h"
+using namespace std;
 
 unordered_map<string, SYS_COMMAND> sys_cmd = {
 	{"ADD", ADD}, {"DEL",DEL }, {"INS",INS},
@@ -90,11 +91,11 @@ vector<string> split_args(string& str)
 	stringstream ss(str);
 	string token;
 	while (getline(ss, token, ',')) {
-		//ºÏ≤Èƒ‹∑Ò∑÷∏Ó
+		//Ê£ÄÊü•ËÉΩÂê¶ÂàÜÂâ≤
 		if (token.size() < 2 || token.front() != '"' || token.back() != '"') {
 			return {};
 		}
-		// »•µÙø™Õ∑∫ÕΩ·Œ≤µƒÀ´“˝∫≈
+		// ÂéªÊéâÂºÄÂ§¥ÂíåÁªìÂ∞æÁöÑÂèåÂºïÂè∑
 		token = token.substr(1, token.size() - 2);
 		arges.push_back(token);
 	}
@@ -109,16 +110,16 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 	{
 	case ADD:
 		if (tokens.size() < 3) {
-			cerr << "≤Œ ˝≤ªÕÍ’˚£¨«ÎºÏ≤Èƒ„µƒ≤Œ ˝" << endl;
-			json j = hint_to_json("error", "≤Œ ˝≤ªÕÍ’˚£¨«ÎºÏ≤Èƒ„µƒ≤Œ ˝", "0");
+			cerr << "ÂèÇÊï∞‰∏çÂÆåÊï¥ÔºåËØ∑Ê£ÄÊü•‰Ω†ÁöÑÂèÇÊï∞" << endl;
+			json j = hint_to_json("error", "ÂèÇÊï∞‰∏çÂÆåÊï¥ÔºåËØ∑Ê£ÄÊü•‰Ω†ÁöÑÂèÇÊï∞", "0");
 			_return = j.dump(-1);
 			break;
 		}
 
 		if (!db.is_use()) 
 		{
-			cerr << "«Îœ»—°‘Ò ˝æ›ø‚£°" << endl;
-			json j = hint_to_json("error", "«Îœ»—°‘Ò ˝æ›ø‚£°", "0");
+			cerr << "ËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ" << endl;
+			json j = hint_to_json("error", "ËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ", "0");
 			_return = j.dump(-1);
 			break;
 		}
@@ -128,16 +129,16 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 		{
 			if (!db.DB_op()->is_sel())
 			{
-				cerr << "«Îœ»—°‘Ò±Ì£°" << endl;
-				json j = hint_to_json("error", "«Îœ»—°‘Ò±Ì£°", "0");
+				cerr << "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ" << endl;
+				json j = hint_to_json("error", "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ", "0");
 				_return = j.dump(-1);
 				break;
 			}
 
 			vector<string> arg = split_args(tokens[2]);
 			if (arg.size() <= 0) {
-				cerr << "÷∏¡Ó≤Œ ˝¥ÌŒÛ!" << endl;
-				json j = hint_to_json("error", "÷∏¡Ó≤Œ ˝¥ÌŒÛ!", "1");
+				cerr << "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!" << endl;
+				json j = hint_to_json("error", "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!", "1");
 				_return = j.dump(-1);
 				break;
 			}
@@ -149,7 +150,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 		{
 			if (!db.DB_op()->is_sel())
 			{
-				cerr << "«Îœ»—°‘Ò±Ì£°" << endl;
+				cerr << "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ" << endl;
 				break;
 			}
 
@@ -158,7 +159,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 			
 			/*
 			if (arg.size() <= 0) {
-				cerr << "÷∏¡Ó≤Œ ˝¥ÌŒÛ!" << endl;
+				cerr << "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!" << endl;
 				break;
 			}
 			*/
@@ -171,7 +172,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 		{
 			vector<string> arg2 = split_args(tokens[2]);
 			if (arg2.size() <= 0) {
-				cerr << "÷∏¡Ó≤Œ ˝¥ÌŒÛ!" << endl;
+				cerr << "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!" << endl;
 				break;
 			}
 			LIST_CONFIG new_cf(tokens[1]);
@@ -185,8 +186,8 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 	case DEL:
 		if (!db.is_use())
 		{
-			cerr << "«Îœ»—°‘Ò ˝æ›ø‚£°" << endl;
-			_return = "[error],[\"«Îœ»—°‘Ò ˝æ›ø‚£°\"]";
+			cerr << "ËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ" << endl;
+			_return = "[error],[\"ËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ\"]";
 			break;
 		}
 
@@ -202,7 +203,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 			}
 			if (!db.DB_op()->is_sel())
 			{
-				cerr << "«Îœ»—°‘Ò±Ì£°" << endl;
+				cerr << "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ" << endl;
 				break;
 			}
 			db.DB_op()->LS_op()->del_row(row);
@@ -219,7 +220,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 			}
 			if (!db.DB_op()->is_sel())
 			{
-				cerr << "«Îœ»—°‘Ò±Ì£°" << endl;
+				cerr << "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ" << endl;
 				break;
 			}
 			db.DB_op()->LS_op()->del_col(col);
@@ -236,14 +237,14 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 					break;
 				}
 			}
-			//»Áπ˚≤ª «id…æ≥˝‘Ú≥¢ ‘√˚≥∆…æ≥˝
+			//Â¶ÇÊûú‰∏çÊòØidÂà†Èô§ÂàôÂ∞ùËØïÂêçÁß∞Âà†Èô§
 			catch (const invalid_argument& e) {
 				if (db.DB_op()->del_List(tokens[1])) {
 					cout << "delete success!" << endl;
 					break;
 				}
 			}
-			//»Áπ˚…æ≥˝ ß∞‹
+			//Â¶ÇÊûúÂà†Èô§Â§±Ë¥•
 			catch (const string& e) {
 				if (e == "Delete_Failed") cerr << e << endl;
 				break;
@@ -253,11 +254,11 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 
 	case INS:
 		if (!db.is_use()) {
-			cerr << "«Îœ»—°‘Ò ˝æ›ø‚£°" << endl;
+			cerr << "ËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ" << endl;
 			break;
 		}
 		else if (!db.DB_op()->is_sel()) {
-			cerr << "«Îœ»—°‘Ò±Ì£°" << endl;
+			cerr << "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ" << endl;
 			break;
 		}
 
@@ -279,11 +280,11 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 
 	case SET:
 		if (!db.is_use()) {
-			cerr << "«Îœ»—°‘Ò ˝æ›ø‚£°" << endl;
+			cerr << "ËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ" << endl;
 			break;
 		}
 		else if (!db.DB_op()->is_sel()) {
-			cerr << "«Îœ»—°‘Ò±Ì£°" << endl;
+			cerr << "ËØ∑ÂÖàÈÄâÊã©Ë°®ÔºÅ" << endl;
 			break;
 		}
 
@@ -295,15 +296,15 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 					row_index = stoi(tokens[2]);
 				}
 				catch (const invalid_argument& e) {
-					cerr << "÷∏¡Ó≤Œ ˝¥ÌŒÛ!" << endl;
+					cerr << "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!" << endl;
 					break;
 				}
 				vector<string> arg = split_args(tokens[3]);
 				if (!db.DB_op()->LS_op()->set_row(row_index, arg)) {
-					cerr << "…Ë÷√–– ß∞‹!" << endl;
+					cerr << "ËÆæÁΩÆË°åÂ§±Ë¥•!" << endl;
 					break;
 				}
-				cout << "µ⁄ " << row_index << " ––µƒƒ⁄»›“—∏ƒ±‰" << endl;
+				cout << "Á¨¨ " << row_index << " Ë°åÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèò" << endl;
 			}
 
 			// SET -C [col] [data] [from] [to]
@@ -314,13 +315,13 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 					column_index = stoi(tokens[2]);
 				}
 				catch (const invalid_argument& e) {
-					cerr << "÷∏¡Ó≤Œ ˝¥ÌŒÛ!" << endl;
+					cerr << "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!" << endl;
 					break;
 				}
 
 				vector<string> arg = split_args(tokens[3]);
 				
-				//»Áπ˚[data]∫Û√Êªπ”–≤Œ ˝
+				//Â¶ÇÊûú[data]ÂêéÈù¢ËøòÊúâÂèÇÊï∞
 				if (tokens.size() >= 5) {
 					//from
 					int start_row = 0;
@@ -328,50 +329,50 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 						start_row = stoi(tokens[4]);
 					}
 					catch (const invalid_argument& e) {
-						//from◊™ªª≤ª≥…π¶£¨‘Ú¥”0ø™ º…Ë÷√
+						//fromËΩ¨Êç¢‰∏çÊàêÂäüÔºåÂàô‰ªé0ÂºÄÂßãËÆæÁΩÆ
 						if (!db.DB_op()->LS_op()->set_col(column_index, arg, 0)) {
-							cerr << "…Ë÷√¡– ß∞‹!" << endl;
+							cerr << "ËÆæÁΩÆÂàóÂ§±Ë¥•!" << endl;
 						}
-						cout << "µ⁄ 0 ––µΩµ⁄ " << arg.size() << " ––µƒƒ⁄»›“—∏ƒ±‰£°" << endl;
+						cout << "Á¨¨ 0 Ë°åÂà∞Á¨¨ " << arg.size() << " Ë°åÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèòÔºÅ" << endl;
 						break;
 					}
 					//to
 					int end_row = -1;
 					if (tokens.size() >= 6) {
 						try {
-							//from end◊™ªª≥…π¶£¨ π”√fromµΩendµƒ…Ë÷√
+							//from endËΩ¨Êç¢ÊàêÂäüÔºå‰ΩøÁî®fromÂà∞endÁöÑËÆæÁΩÆ
 							end_row = stoi(tokens[5]);
 							if (!db.DB_op()->LS_op()->set_colc(column_index, arg, start_row, end_row)) {
-								cerr << "…Ë÷√¡– ß∞‹!" << endl;
+								cerr << "ËÆæÁΩÆÂàóÂ§±Ë¥•!" << endl;
 								break;
 							}
-							cout << "µ⁄" << start_row << " ––µΩµ⁄ " << end_row << " ––µƒƒ⁄»›“—∏ƒ±‰£°" << endl;
+							cout << "Á¨¨" << start_row << " Ë°åÂà∞Á¨¨ " << end_row << " Ë°åÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèòÔºÅ" << endl;
 						}
 						catch (const invalid_argument& e) {
-							//end≤ª≥…π¶£¨‘Ú¥”fromø™ º£¨“‘ƒ⁄»›Œ™∑∂ŒßΩ¯––…Ë÷√
+							//end‰∏çÊàêÂäüÔºåÂàô‰ªéfromÂºÄÂßãÔºå‰ª•ÂÜÖÂÆπ‰∏∫ËåÉÂõ¥ËøõË°åËÆæÁΩÆ
 							if (!db.DB_op()->LS_op()->set_col(column_index, arg, start_row)) {
-								cerr << "…Ë÷√¡– ß∞‹!" << endl;
+								cerr << "ËÆæÁΩÆÂàóÂ§±Ë¥•!" << endl;
 								break;
 							}
-							cout << "µ⁄" << start_row << " ––µΩµ⁄ " << arg.size() << " ––µƒƒ⁄»›“—∏ƒ±‰£°" << endl;
+							cout << "Á¨¨" << start_row << " Ë°åÂà∞Á¨¨ " << arg.size() << " Ë°åÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèòÔºÅ" << endl;
 						}
 					}
 					else
 					{
 						if (!db.DB_op()->LS_op()->set_col(column_index, arg, start_row)) {
-							cerr << "…Ë÷√¡– ß∞‹!" << endl;
+							cerr << "ËÆæÁΩÆÂàóÂ§±Ë¥•!" << endl;
 						}
-						cout << "µ⁄" << start_row << " ––µΩµ⁄ " << arg.size() << " ––µƒƒ⁄»›“—∏ƒ±‰£°" << endl;
+						cout << "Á¨¨" << start_row << " Ë°åÂà∞Á¨¨ " << arg.size() << " Ë°åÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèòÔºÅ" << endl;
 						break;
 					}
 				}
-				//[data]∫Û√ÊŒﬁ≤Œ ˝
+				//[data]ÂêéÈù¢Êó†ÂèÇÊï∞
 				else {
 					if (!db.DB_op()->LS_op()->set_colc(column_index, arg, 0,db.DB_op()->LS_op()->_data.size())) {
-						cerr << "…Ë÷√¡– ß∞‹!" << endl;
+						cerr << "ËÆæÁΩÆÂàóÂ§±Ë¥•!" << endl;
 						break;
 					}
-					cout << "µ⁄ " << column_index << " ¡–µƒƒ⁄»›“—∏ƒ±‰" << endl;
+					cout << "Á¨¨ " << column_index << " ÂàóÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèò" << endl;
 				}
 			}
 
@@ -381,13 +382,13 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 					int row_index = stoi(tokens[1]);
 					int column_index = stoi(tokens[2]);
 					if (!db.DB_op()->LS_op()->set(row_index, column_index, tokens[3])) {
-						cerr << "…Ë÷√µ•‘™∏Ò ß∞‹!" << endl;
+						cerr << "ËÆæÁΩÆÂçïÂÖÉÊ†ºÂ§±Ë¥•!" << endl;
 						break;
 					}
-					cout << "µ⁄ " << row_index << " ––µ⁄ " << column_index << " ¡–µƒƒ⁄»›“—∏ƒ±‰" << endl;
+					cout << "Á¨¨ " << row_index << " Ë°åÁ¨¨ " << column_index << " ÂàóÁöÑÂÜÖÂÆπÂ∑≤ÊîπÂèò" << endl;
 				}
 				catch (const invalid_argument& e) {
-					cerr << "÷∏¡Ó≤Œ ˝¥ÌŒÛ!" << endl;
+					cerr << "Êåá‰ª§ÂèÇÊï∞ÈîôËØØ!" << endl;
 					break;
 				}
 			}
@@ -410,7 +411,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 		else if (tokens.size() >= 2 && tokens[1] == "-LS")
 		{
 			if (!db.is_use()) {
-				cerr << "ƒ„√ª”–—°‘Ò»Œ∫Œ ˝æ›ø‚£¨Œﬁ∑®≤Èø¥À˘”–¡–±Ì" << endl;
+				cerr << "‰Ω†Ê≤°ÊúâÈÄâÊã©‰ªª‰ΩïÊï∞ÊçÆÂ∫ìÔºåÊó†Ê≥ïÊü•ÁúãÊâÄÊúâÂàóË°®" << endl;
 				break;
 			}
 			int i = 0;
@@ -424,11 +425,11 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 		}
 		
 		if (!db.is_use()) {
-			cerr << "Œ¥—°‘Ò ˝æ›ø‚£°" << endl;
+			cerr << "Êú™ÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ" << endl;
 			break;
 		}
 		else if(!db.DB_op()->is_sel()) {
-			cerr << "Œ¥—°‘Ò±Ì£°" << endl;
+			cerr << "Êú™ÈÄâÊã©Ë°®ÔºÅ" << endl;
 			break;
 		}
 		
@@ -440,7 +441,7 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 				try {
 					int row = stoi(tokens[2]);
 					if (row < 0 || row >= db.DB_op()->LS_op()->_data.size()) {
-						cerr << "Œ¥ªÒ»°µΩ∏√––£¨¥À––≤ª¥Ê‘⁄£°" << endl;
+						cerr << "Êú™Ëé∑ÂèñÂà∞ËØ•Ë°åÔºåÊ≠§Ë°å‰∏çÂ≠òÂú®ÔºÅ" << endl;
 						break;
 					}
 					else {
@@ -467,39 +468,39 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 			try {
 				int _uid = stoi(tokens[2]);
 				if (!db.use_db(_uid)) {
-					cerr << "—°÷– ß∞‹£¨ƒ„—°‘Ò¡À“ª∏ˆ≤ª¥Ê‘⁄µƒ ˝æ›ø‚£°" << endl;
+					cerr << "ÈÄâ‰∏≠Â§±Ë¥•Ôºå‰Ω†ÈÄâÊã©‰∫Ü‰∏Ä‰∏™‰∏çÂ≠òÂú®ÁöÑÊï∞ÊçÆÂ∫ìÔºÅ" << endl;
 					break;
 				}
 			}
 			catch (const invalid_argument& e) {
 				if (!db.use_db(tokens[2])) {
-					cerr << "—°÷– ß∞‹£¨ƒ„—°‘Ò¡À“ª∏ˆ≤ª¥Ê‘⁄µƒ ˝æ›ø‚£°" << endl;
+					cerr << "ÈÄâ‰∏≠Â§±Ë¥•Ôºå‰Ω†ÈÄâÊã©‰∫Ü‰∏Ä‰∏™‰∏çÂ≠òÂú®ÁöÑÊï∞ÊçÆÂ∫ìÔºÅ" << endl;
 					break;
 				}
 			}
-			cout << "—°÷– ˝æ›ø‚£∫" << db.DB_op()->get_name() << endl;
+			cout << "ÈÄâ‰∏≠Êï∞ÊçÆÂ∫ìÔºö" << db.DB_op()->get_name() << endl;
 			break;
 		}
 		//SEL -LS [name]
 		else if (tokens.size() >= 3 && tokens[1] == "-LS") {
 			if (!db.is_use()) {
-				cerr << "Œ¥—°‘Ò ˝æ›ø‚£¨«Îœ»—°‘Ò ˝æ›ø‚£°" << endl;
+				cerr << "Êú™ÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºåËØ∑ÂÖàÈÄâÊã©Êï∞ÊçÆÂ∫ìÔºÅ" << endl;
 				break;
 			}
 			try {
 				int id = stoi(tokens[2]);
 				if (!db.DB_op()->select_list(id)) {
-					cerr << "—°÷– ß∞‹£¨ƒ„—°‘Ò¡À“ª∏ˆ≤ª¥Ê‘⁄µƒ±Ì£°" << endl;
+					cerr << "ÈÄâ‰∏≠Â§±Ë¥•Ôºå‰Ω†ÈÄâÊã©‰∫Ü‰∏Ä‰∏™‰∏çÂ≠òÂú®ÁöÑË°®ÔºÅ" << endl;
 					break;
 				}
 			}
 			catch (const invalid_argument& e) {
 				if (!db.DB_op()->select_list(tokens[2])) {
-					cerr << "—°÷– ß∞‹£¨ƒ„—°‘Ò¡À“ª∏ˆ≤ª¥Ê‘⁄µƒ±Ì£°" << endl;
+					cerr << "ÈÄâ‰∏≠Â§±Ë¥•Ôºå‰Ω†ÈÄâÊã©‰∫Ü‰∏Ä‰∏™‰∏çÂ≠òÂú®ÁöÑË°®ÔºÅ" << endl;
 					break;
 				}
 			}
-			cout << "—°÷–¡–±Ì£∫" << db.DB_op()->LS_op()->get_name() << endl;
+			cout << "ÈÄâ‰∏≠ÂàóË°®Ôºö" << db.DB_op()->LS_op()->get_name() << endl;
 			break;
 		}
 		break;
@@ -508,23 +509,23 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 		//CLOSE -LS/-DB
 		if (tokens.size() >= 1) {
 			if (!db.close_DB()) {
-				cerr << "πÿ±’ ß∞‹£¨“ÚŒ™ƒ„ªπŒ¥—°‘Ò»Œ∫Œ ˝æ›ø‚ªÚ±Ì" << endl;
+				cerr << "ÂÖ≥Èó≠Â§±Ë¥•ÔºåÂõ†‰∏∫‰Ω†ËøòÊú™ÈÄâÊã©‰ªª‰ΩïÊï∞ÊçÆÂ∫ìÊàñË°®" << endl;
 				break;
 			}
 		}
 		else if (tokens.size() >= 2 && tokens[1] == "-LS") {
 			if (!db.is_use()) {
-				cerr << "πÿ±’ ß∞‹£¨“ÚŒ™ƒ„ªπŒ¥—°‘Ò»Œ∫Œ ˝æ›ø‚ªÚ±Ì" << endl;
+				cerr << "ÂÖ≥Èó≠Â§±Ë¥•ÔºåÂõ†‰∏∫‰Ω†ËøòÊú™ÈÄâÊã©‰ªª‰ΩïÊï∞ÊçÆÂ∫ìÊàñË°®" << endl;
 				break;
 			}
 			if (!db.DB_op()->close_list()) {
-				cerr << "πÿ±’ ß∞‹£¨“ÚŒ™ƒ„ªπŒ¥—°‘Ò»Œ∫Œ ˝æ›ø‚ªÚ±Ì" << endl;
+				cerr << "ÂÖ≥Èó≠Â§±Ë¥•ÔºåÂõ†‰∏∫‰Ω†ËøòÊú™ÈÄâÊã©‰ªª‰ΩïÊï∞ÊçÆÂ∫ìÊàñË°®" << endl;
 				break;
 			}
 		}
 		else if (tokens.size() >= 2 && tokens[1] == "-DB") {
 			if (!db.close_DB()) {
-				cerr << "πÿ±’ ß∞‹£¨“ÚŒ™ƒ„ªπŒ¥—°‘Ò»Œ∫Œ ˝æ›ø‚ªÚ±Ì" << endl;
+				cerr << "ÂÖ≥Èó≠Â§±Ë¥•ÔºåÂõ†‰∏∫‰Ω†ËøòÊú™ÈÄâÊã©‰ªª‰ΩïÊï∞ÊçÆÂ∫ìÊàñË°®" << endl;
 				break;
 			}
 		}
@@ -537,12 +538,12 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 			DB_CONFIG new_cf(tokens[1]);
 			if (!db.new_db(new_cf))
 			{
-				cerr << "¥¥Ω® ˝æ›ø‚ ß∞‹£°" << endl;
+				cerr << "ÂàõÂª∫Êï∞ÊçÆÂ∫ìÂ§±Ë¥•ÔºÅ" << endl;
 				break;
 			}
 			else
 			{
-				cout << "“—≥…π¶¥¥Ω® ˝æ›ø‚£¨«Î π”√ SEL -DB " << tokens[1] << " ÷∏¡Ó¿¥—°÷–À¸£°" << endl;
+				cout << "Â∑≤ÊàêÂäüÂàõÂª∫Êï∞ÊçÆÂ∫ìÔºåËØ∑‰ΩøÁî® SEL -DB " << tokens[1] << " Êåá‰ª§Êù•ÈÄâ‰∏≠ÂÆÉÔºÅ" << endl;
 				break;
 			}
 		}
@@ -555,25 +556,25 @@ void Cmd_sys::execute(DB_server& db, vector<string>& tokens)
 				int i = -1;
 				i = stoi(tokens[1]);
 				if (!db.del_db(i)) {
-					cerr << "…æ≥˝ ß∞‹£°" << endl;
+					cerr << "Âà†Èô§Â§±Ë¥•ÔºÅ" << endl;
 					break;
 				}
 				else
 				{
-					cout << "…æ≥˝≥…π¶£°" << endl;
+					cout << "Âà†Èô§ÊàêÂäüÔºÅ" << endl;
 					break;
 				}
 			}
 			catch (const invalid_argument& e)
 			{
-				cerr << "ƒ„–Ë“™ ‰»Îid£°" << endl;
+				cerr << "‰Ω†ÈúÄË¶ÅËæìÂÖ•idÔºÅ" << endl;
 				break;
 			}
 		}
 		break;
 
 	default:
-		cerr << "Œ¥÷™÷∏¡Ó£¨«Îƒ„ºÏ≤ÈºÏ≤È£°" << endl;
+		cerr << "Êú™Áü•Êåá‰ª§ÔºåËØ∑‰Ω†Ê£ÄÊü•Ê£ÄÊü•ÔºÅ" << endl;
 		break;
 	}
 	if (is_set_socket()) {

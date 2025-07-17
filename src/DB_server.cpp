@@ -1,13 +1,14 @@
-#include "DB_server.h"
+ï»¿#include "DB_server.h"
 #include "Cmd.h"
 #include "Cmd_Factory.h"
+using namespace std;
 
 /*
-* DB_serverµÄÊµÏÖ
-*/
+ * DB_serverçš„å®ç°
+ */
 
 DB_server::DB_server(string path)
-    :_sf_path(path)
+    : _sf_path(path)
 {
     load_config(_sf_path);
     _server = nullptr;
@@ -15,7 +16,7 @@ DB_server::DB_server(string path)
 
 DB_server::~DB_server()
 {
-    for (auto& item : _db_map)
+    for (auto &item : _db_map)
     {
         delete item.second;
     }
@@ -23,14 +24,17 @@ DB_server::~DB_server()
 
 void DB_server::load_config(string path)
 {
-    if (path == "default") path = _sf_path;
-    else _sf_path = path;
+    if (path == "default")
+        path = _sf_path;
+    else
+        _sf_path = path;
 
     string db_list_path = path + "/config/db_list_config.json";
 
     ifstream file(db_list_path);
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         cerr << "Error loading DB" << endl;
         return;
     }
@@ -40,40 +44,45 @@ void DB_server::load_config(string path)
     json j;
     file >> j;
 
-    for (auto& db : j["db"])
+    for (auto &db : j["db"])
     {
         DB_CONFIG new_db(db["name"]);
-        for (auto& ls : db["list"]) {
+        for (auto &ls : db["list"])
+        {
             new_db._list_.push_back(LIST_CONFIG(ls["name"]));
         }
         _sf_db.push_back(new_db);
     }
 
     string config_path = path + "/config/config.json";
-    //´ı¶¨
+    // å¾…å®š
 }
 
 bool DB_server::save_config(string path)
 {
-    if (path == "default") path = _sf_path;
-    else _sf_path = path;
+    if (path == "default")
+        path = _sf_path;
+    else
+        _sf_path = path;
 
     string db_list_path = path + "/config/db_list_config.json";
-    
+
     ofstream file(db_list_path);
 
-    if (!file.is_open()) {
+    if (!file.is_open())
+    {
         cerr << "Saving server config failed, error opening file!" << endl;
         return false;
     }
 
     json j;
 
-    for (auto& n : _sf_db)
+    for (auto &n : _sf_db)
     {
         json j_list;
         j_list["name"] = n.get_name();
-        for (auto& m : n._list_) {
+        for (auto &m : n._list_)
+        {
             json d_list;
             d_list["name"] = m.get_name();
             j_list["list"].push_back(d_list);
@@ -86,35 +95,38 @@ bool DB_server::save_config(string path)
     return true;
 }
 
-DB_engine* DB_server::use_db(string name)
+DB_engine *DB_server::use_db(string name)
 {
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == name; });
-    if (it == _sf_db.end()) {
-        //cerr << "You are selecting an inxistent DB" << endl;
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == name; });
+    if (it == _sf_db.end())
+    {
+        // cerr << "You are selecting an inxistent DB" << endl;
         return nullptr;
     }
     return use_db(it - _sf_db.begin());
 }
 
-DB_engine* DB_server::use_db(int sid)
+DB_engine *DB_server::use_db(int sid)
 {
-    if (sid < 0 || sid >= _sf_db.size()) {
-        //cerr << "You are selecting an inxistent DataBase." << endl;
+    if (sid < 0 || sid >= _sf_db.size())
+    {
+        // cerr << "You are selecting an inxistent DataBase." << endl;
         return nullptr;
     }
 
     thread::id this_id = std::this_thread::get_id();
     if (_db_map.find(this_id) == _db_map.end())
     {
-        // Èç¹ûµ±Ç°Ïß³ÌµÄ DB_engine ÊµÀı²»´æÔÚ£¬Ôò´´½¨Ò»¸öĞÂÊµÀı
+        // å¦‚æœå½“å‰çº¿ç¨‹çš„ DB_engine å®ä¾‹ä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªæ–°å®ä¾‹
         _db_map[this_id] = new DB_engine(_sf_path + "/db/" + _sf_db[sid].get_name());
     }
     else
     {
-        // Èç¹ûµ±Ç°Ïß³ÌµÄ DB_engine ÊµÀıÒÑ´æÔÚ£¬ÔòÏÈ¹Ø±ÕËü
+        // å¦‚æœå½“å‰çº¿ç¨‹çš„ DB_engine å®ä¾‹å·²å­˜åœ¨ï¼Œåˆ™å…ˆå…³é—­å®ƒ
         close_DB();
-        // È»ºó´´½¨Ò»¸öĞÂÊµÀı
+        // ç„¶ååˆ›å»ºä¸€ä¸ªæ–°å®ä¾‹
         _db_map[this_id] = new DB_engine(_sf_path + "/db/" + _sf_db[sid].get_name());
     }
     cout << "You selected the DataBase: " << _sf_db[sid].get_name() << endl;
@@ -124,12 +136,13 @@ DB_engine* DB_server::use_db(int sid)
 bool DB_server::close_DB()
 {
     std::thread::id this_id = std::this_thread::get_id();
-    if (_db_map.find(this_id) == _db_map.end()) return false;
-    
-    DB_engine* db_instance = _db_map[this_id];
+    if (_db_map.find(this_id) == _db_map.end())
+        return false;
+
+    DB_engine *db_instance = _db_map[this_id];
     db_instance->close_list();
     db_instance->save_DB();
-    
+
     delete db_instance;
     _db_map.erase(this_id);
 
@@ -140,22 +153,25 @@ bool DB_server::is_use()
 {
     std::thread::id this_id = std::this_thread::get_id();
     auto it = _db_map.find(this_id);
-    if (it == _db_map.end()) return false;
+    if (it == _db_map.end())
+        return false;
     return true;
 }
 
-DB_engine* DB_server::DB_op()
+DB_engine *DB_server::DB_op()
 {
     std::thread::id this_id = std::this_thread::get_id();
     auto it = _db_map.find(this_id);
-    if (it == _db_map.end()) return nullptr;
-    else return _db_map[this_id];
+    if (it == _db_map.end())
+        return nullptr;
+    else
+        return _db_map[this_id];
 }
 
-bool DB_server::new_db(DB_CONFIG& new_db_cf)
+bool DB_server::new_db(DB_CONFIG &new_db_cf)
 {
     /*
-    //ÉèÖÃuid
+    //è®¾ç½®uid
     for (auto& db : _sf_db)
     {
         if (db.get_name() == new_db_cf.get_name()) {
@@ -164,11 +180,12 @@ bool DB_server::new_db(DB_CONFIG& new_db_cf)
     }
     new_db_cf.set_uid(_sf_db.size());
     */
-    //ÎÄ¼ş¶ÁĞ´
+    // æ–‡ä»¶è¯»å†™
     string saving_path = _sf_path + "/db/" + new_db_cf.get_name();
-    if (!boost::filesystem::create_directories(saving_path))
+
+    if (!filesystem::create_directories(saving_path))
     {
-        cerr << "Create database failed, becuase create floder failed£¡" << endl;
+        cerr << "Create database failed, becuase create floder failedï¼" << endl;
         return false;
     }
 
@@ -180,17 +197,19 @@ bool DB_server::new_db(DB_CONFIG& new_db_cf)
 
     _sf_db.push_back(new_db_cf);
     save_config();
+    return true;
 }
 
 bool DB_server::del_db(int uid)
 {
-    if (uid >= _sf_db.size() || uid < 0) {
+    if (uid >= _sf_db.size() || uid < 0)
+    {
         cerr << "You are deleting an inxistent DB" << endl;
         return false;
     }
 
     std::string db_name = _sf_db[uid].get_name();
-    for (const auto& entry : _db_map)
+    for (const auto &entry : _db_map)
     {
         if (entry.second->get_name() == db_name)
         {
@@ -200,9 +219,10 @@ bool DB_server::del_db(int uid)
     }
 
     string list_path = _sf_path + "/db/" + _sf_db[uid].get_name();
-    if (boost::filesystem::remove_all(list_path)) cerr << "Delete failed!" << endl;
- 
-    cout << "Delete DataBase successful!" << _sf_db[uid].get_name() <<endl;
+    if (filesystem::remove_all(list_path))
+        cerr << "Delete failed!" << endl;
+
+    cout << "Delete DataBase successful!" << _sf_db[uid].get_name() << endl;
 
     _sf_db.erase(_sf_db.begin() + uid);
     save_config();
@@ -212,57 +232,69 @@ bool DB_server::del_db(int uid)
 bool DB_server::is_args_right(string db_name, string ls_name)
 {
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
 
-    if (it == _sf_db.end()) return false;
+    if (it == _sf_db.end())
+        return false;
     else
     {
         auto it1 = std::find_if(it->_list_.begin(), it->_list_.end(),
-            [&](LIST_CONFIG& item) { return item.get_name() == ls_name; });
-        if (it1 == it->_list_.end()) return false;
+                                [&](LIST_CONFIG &item)
+                                { return item.get_name() == ls_name; });
+        if (it1 == it->_list_.end())
+            return false;
     }
     return true;
 }
 
 vector<string> DB_server::query_srow(string db_name, string ls_name, int row)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
 
     db.select_list(ls_name);
-    if (row >= db.LS_op()->_data.size() || row < 0) return vector<string>();
-    else return db.LS_op()->_data[row];
+    if (row >= db.LS_op()->_data.size() || row < 0)
+        return vector<string>();
+    else
+        return db.LS_op()->_data[row];
 }
 
-vector<string> DB_server::query_srow(DB_engine& db, int row)
+vector<string> DB_server::query_srow(DB_engine &db, int row)
 {
-    if (row >= db.LS_op()->_data.size() || row < 0) return vector<string>();
+    if (row >= db.LS_op()->_data.size() || row < 0)
+        return vector<string>();
     return db.LS_op()->_data[row];
 }
 
 vector<string> DB_server::query_scol(string db_name, string ls_name, int col)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
 
     db.select_list(ls_name);
 
-    if (col >= db.LS_op()->_head.size() || col < 0) return vector<string>();
+    if (col >= db.LS_op()->_head.size() || col < 0)
+        return vector<string>();
 
     vector<string> result;
-    //result.push_back(db.LS_op()->_head[col]);
+    // result.push_back(db.LS_op()->_head[col]);
 
-    for (auto& items : db.LS_op()->_data)
+    for (auto &items : db.LS_op()->_data)
     {
         result.push_back(items[col]);
     }
@@ -270,14 +302,15 @@ vector<string> DB_server::query_scol(string db_name, string ls_name, int col)
     return result;
 }
 
-vector<string> DB_server::query_scol(DB_engine& db, int col)
+vector<string> DB_server::query_scol(DB_engine &db, int col)
 {
-    if (col >= db.LS_op()->_head.size() || col < 0) return vector<string>();
+    if (col >= db.LS_op()->_head.size() || col < 0)
+        return vector<string>();
 
     vector<string> result;
-   // result.push_back(db.LS_op()->_head[col]);
+    // result.push_back(db.LS_op()->_head[col]);
 
-    for (auto& items : db.LS_op()->_data)
+    for (auto &items : db.LS_op()->_data)
     {
         result.push_back(items[col]);
     }
@@ -285,12 +318,14 @@ vector<string> DB_server::query_scol(DB_engine& db, int col)
     return result;
 }
 
-vector<vector<string>> DB_server::query_rows(string db_name, string ls_name, vector<int>& row)
+vector<vector<string>> DB_server::query_rows(string db_name, string ls_name, vector<int> &row)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
 
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
@@ -298,17 +333,20 @@ vector<vector<string>> DB_server::query_rows(string db_name, string ls_name, vec
 
     db.select_list(ls_name);
     vector<vector<string>> result;
-    result.reserve(row.size());  // Ô¤·ÖÅäÄÚ´æ
-    for (auto& i : row) result.push_back(query_srow(db, i));
+    result.reserve(row.size()); // é¢„åˆ†é…å†…å­˜
+    for (auto &i : row)
+        result.push_back(query_srow(db, i));
     return result;
 }
 
 vector<vector<string>> DB_server::query_rows(string db_name, string ls_name)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
@@ -318,16 +356,19 @@ vector<vector<string>> DB_server::query_rows(string db_name, string ls_name)
 
     vector<vector<string>> result;
     result.reserve(all);
-    for (int i = 0; i < all; i++) result.push_back(query_srow(db, i));
+    for (int i = 0; i < all; i++)
+        result.push_back(query_srow(db, i));
     return result;
 }
 
-vector<vector<string>> DB_server::query_cols(string db_name, string ls_name, vector<int>& col)
+vector<vector<string>> DB_server::query_cols(string db_name, string ls_name, vector<int> &col)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
 
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
@@ -335,24 +376,27 @@ vector<vector<string>> DB_server::query_cols(string db_name, string ls_name, vec
     db.select_list(ls_name);
 
     vector<vector<string>> result;
-    result.reserve(col.size());  // Ô¤·ÖÅäÄÚ´æ
-    for (auto& i : col) result.push_back(query_scol(db, i));
+    result.reserve(col.size()); // é¢„åˆ†é…å†…å­˜
+    for (auto &i : col)
+        result.push_back(query_scol(db, i));
     return result;
 }
 
 vector<vector<string>> DB_server::query_Q(string db_name, string ls_name, string head, string target)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
 
     db.select_list(ls_name);
 
-    // ÕÒµ½ head ÁĞÔÚ±íÖĞµÄÎ»ÖÃ
+    // æ‰¾åˆ° head åˆ—åœ¨è¡¨ä¸­çš„ä½ç½®
     int col = -1;
     for (size_t i = 0; i < db.LS_op()->_head.size(); i++)
     {
@@ -362,11 +406,12 @@ vector<vector<string>> DB_server::query_Q(string db_name, string ls_name, string
             break;
         }
     }
-    if (col == -1) return {};
+    if (col == -1)
+        return {};
 
-    // ±éÀú±íÖĞµÄËùÓĞĞĞ£¬ÕÒµ½ÄÇĞ©ÔÚ head ÁĞÏÂ£¬Êı¾İÎª target µÄĞĞ
+    // éå†è¡¨ä¸­çš„æ‰€æœ‰è¡Œï¼Œæ‰¾åˆ°é‚£äº›åœ¨ head åˆ—ä¸‹ï¼Œæ•°æ®ä¸º target çš„è¡Œ
     vector<vector<string>> result;
-    for (const auto& row : db.LS_op()->_data)
+    for (const auto &row : db.LS_op()->_data)
     {
         if (row[col] == target)
         {
@@ -379,17 +424,19 @@ vector<vector<string>> DB_server::query_Q(string db_name, string ls_name, string
 
 vector<int> DB_server::query_w(string db_name, string ls_name, string head, string target)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
 
     db.select_list(ls_name);
 
-    // ÕÒµ½ head ÁĞÔÚ±íÖĞµÄÎ»ÖÃ
+    // æ‰¾åˆ° head åˆ—åœ¨è¡¨ä¸­çš„ä½ç½®
     int col = -1;
     for (size_t i = 0; i < db.LS_op()->_head.size(); i++)
     {
@@ -399,9 +446,10 @@ vector<int> DB_server::query_w(string db_name, string ls_name, string head, stri
             break;
         }
     }
-    if (col == -1) return vector<int>();
+    if (col == -1)
+        return vector<int>();
 
-    // ±éÀú±íÖĞµÄËùÓĞĞĞ£¬ÕÒµ½ÄÇĞ©ÔÚ head ÁĞÏÂ£¬Êı¾İÎª target µÄĞĞ
+    // éå†è¡¨ä¸­çš„æ‰€æœ‰è¡Œï¼Œæ‰¾åˆ°é‚£äº›åœ¨ head åˆ—ä¸‹ï¼Œæ•°æ®ä¸º target çš„è¡Œ
     vector<int> result;
     for (size_t i = 0; i < db.LS_op()->_data.size(); i++)
     {
@@ -416,10 +464,12 @@ vector<int> DB_server::query_w(string db_name, string ls_name, string head, stri
 
 vector<string> DB_server::query_head(string db_name, string ls_name)
 {
-    if (!is_args_right) return {};
+    if (!is_args_right(db_name, ls_name))
+        return {};
 
     auto it = std::find_if(_sf_db.begin(), _sf_db.end(),
-        [&](DB_CONFIG& item) { return item.get_name() == db_name; });
+                           [&](DB_CONFIG &item)
+                           { return item.get_name() == db_name; });
     int id = it - _sf_db.begin();
     string path = _sf_path + "/db/" + _sf_db[id].get_name();
     DB_engine db(path);
@@ -428,17 +478,19 @@ vector<string> DB_server::query_head(string db_name, string ls_name)
     return db.LS_op()->_head;
 }
 
-string DB_server::cmd_handle(tcp::socket& g_socket, string cmd)
+string DB_server::cmd_handle(tcp::socket &g_socket, string cmd)
 {
     vector<string> result;
     istringstream iss(cmd);
     string token;
-    while (iss >> token) {
+    while (iss >> token)
+    {
         result.push_back(token);
     }
     unique_ptr<Cmd> _cmd;
     _cmd = Cmd_Factory().create_Cmd(*this, result);
-    if (!_cmd) return string();
+    if (!_cmd)
+        return string();
 
     _cmd->set_socket(g_socket);
     _cmd->execute(*this, result);
@@ -451,12 +503,14 @@ bool DB_server::cmd_handle_host(string cmd)
     vector<string> result;
     istringstream iss(cmd);
     string token;
-    while (iss >> token) {
+    while (iss >> token)
+    {
         result.push_back(token);
     }
     unique_ptr<Cmd> _cmd;
     _cmd = Cmd_Factory().create_Cmd(*this, result);
-    if (!_cmd) return false;
+    if (!_cmd)
+        return false;
 
     _cmd->execute(*this, result);
     return true;
@@ -464,7 +518,8 @@ bool DB_server::cmd_handle_host(string cmd)
 
 bool DB_server::start_network_server(unsigned int port)
 {
-    if (_server) {
+    if (_server)
+    {
         return false;
     }
     _server = new network_server(port, this);
@@ -474,7 +529,8 @@ bool DB_server::start_network_server(unsigned int port)
 
 bool DB_server::stop_network_server()
 {
-    if (_server) {
+    if (_server)
+    {
         _server->stop();
         delete[] _server;
         return true;
@@ -483,8 +539,8 @@ bool DB_server::stop_network_server()
 }
 
 /*
-* net_work_serverµÄÊµÏÖ
-*/
+ * net_work_serverçš„å®ç°
+ */
 
 void DB_server::network_server::network_server::cleanup_threads()
 {
@@ -512,7 +568,8 @@ void DB_server::network_server::handle_client(tcp::socket _socket)
         std::string cmd;
         boost::system::error_code error;
         asio::read_until(_socket, asio::dynamic_buffer(cmd), "\n", error);
-        if (error) {
+        if (error)
+        {
             _parent->close_DB();
             cout << "Client disconnected" << endl;
             break;
@@ -521,14 +578,14 @@ void DB_server::network_server::handle_client(tcp::socket _socket)
         string result = _parent->cmd_handle(_socket, cmd);
 
         result += '\n';
-        uint32_t length = htonl(result.size()); // ½«×Ö·û´®³¤¶È×ª»»ÎªÍøÂç×Ö½ÚĞò
-        //boost::asio::write(_socket, boost::asio::buffer(&length, sizeof(length))); // ·¢ËÍ×Ö·û´®³¤¶È
-        boost::asio::write(_socket, boost::asio::buffer(result)); // ·¢ËÍ×Ö·û´®
-        // Òì²½·¢ËÍ×Ö·û´®³¤¶È
-        //boost::asio::async_write(_socket, boost::asio::buffer(&length, sizeof(length)), [](const boost::system::error_code&, std::size_t) {});
-        // Òì²½·¢ËÍ×Ö·û´®
-        //boost::asio::async_write(_socket, boost::asio::buffer(result), [](const boost::system::error_code&, std::size_t) {});
-        //io_context.run();
+        uint32_t length = htonl(result.size()); // å°†å­—ç¬¦ä¸²é•¿åº¦è½¬æ¢ä¸ºç½‘ç»œå­—èŠ‚åº
+        // boost::asio::write(_socket, boost::asio::buffer(&length, sizeof(length))); // å‘é€å­—ç¬¦ä¸²é•¿åº¦
+        boost::asio::write(_socket, boost::asio::buffer(result)); // å‘é€å­—ç¬¦ä¸²
+        // å¼‚æ­¥å‘é€å­—ç¬¦ä¸²é•¿åº¦
+        // boost::asio::async_write(_socket, boost::asio::buffer(&length, sizeof(length)), [](const boost::system::error_code&, std::size_t) {});
+        // å¼‚æ­¥å‘é€å­—ç¬¦ä¸²
+        // boost::asio::async_write(_socket, boost::asio::buffer(result), [](const boost::system::error_code&, std::size_t) {});
+        // io_context.run();
         cout << length << endl;
         cout << result << endl;
         cout << endl;
@@ -540,11 +597,12 @@ void DB_server::network_server::handle_client(tcp::socket _socket)
 DB_server::network_server::~network_server()
 {
     stop();
-    if (_acceptor) delete _acceptor;
+    if (_acceptor)
+        delete _acceptor;
 }
 
-DB_server::network_server::network_server(int port, DB_server* parent)
-    :_port(port), _parent(parent), _is_stop(true)
+DB_server::network_server::network_server(int port, DB_server *parent)
+    : _port(port), _parent(parent), _is_stop(true)
 {
     _acceptor = nullptr;
 }
@@ -552,9 +610,8 @@ DB_server::network_server::network_server(int port, DB_server* parent)
 void DB_server::network_server::start()
 {
     cout << "Starting server on port " << _port << endl;
-    
 
-    _acceptor = new tcp::acceptor(io_context, tcp::endpoint(tcp::v4(), _port));  // ±£´æ acceptor ¶ÔÏóµÄµØÖ·
+    _acceptor = new tcp::acceptor(io_context, tcp::endpoint(tcp::v4(), _port)); // ä¿å­˜ acceptor å¯¹è±¡çš„åœ°å€
     std::cout << "Listening on " << _acceptor->local_endpoint().address().to_string() << " : " << _acceptor->local_endpoint().port() << std::endl;
 
     _is_stop = false;
@@ -565,16 +622,18 @@ void DB_server::network_server::start()
         _acceptor->accept(socket);
 
         cleanup_threads();
-        // ÎªÃ¿¸ö¿Í»§¶ËÁ¬½Ó´´½¨Ò»¸öĞÂÏß³Ì£¬²¢½«ÆäÌí¼Óµ½ _client_threads ÖĞ
+        // ä¸ºæ¯ä¸ªå®¢æˆ·ç«¯è¿æ¥åˆ›å»ºä¸€ä¸ªæ–°çº¿ç¨‹ï¼Œå¹¶å°†å…¶æ·»åŠ åˆ° _client_threads ä¸­
         _client_threads.push_back(thread(&network_server::handle_client, this, std::move(socket)));
     }
 
-    // µÈ´ıËùÓĞ¿Í»§¶ËÁ¬½ÓµÄÏß³Ì¶¼½áÊø
-    for (auto& t : _client_threads) t.join();
+    // ç­‰å¾…æ‰€æœ‰å®¢æˆ·ç«¯è¿æ¥çš„çº¿ç¨‹éƒ½ç»“æŸ
+    for (auto &t : _client_threads)
+        t.join();
 }
 
 void DB_server::network_server::stop()
 {
     _is_stop = true;
-    if (_acceptor) _acceptor->close();
+    if (_acceptor)
+        _acceptor->close();
 }

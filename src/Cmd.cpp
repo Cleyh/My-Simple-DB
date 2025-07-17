@@ -1,4 +1,5 @@
-#include "Cmd.h"
+﻿#include "Cmd.h"
+using namespace std;
 
 void Cmd::return_data(std::string& data)
 {

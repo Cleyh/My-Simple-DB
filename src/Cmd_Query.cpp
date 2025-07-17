@@ -1,7 +1,8 @@
-#include "Cmd_Query.h"
+ï»¿#include "Cmd_Query.h"
+using namespace std;
 
 /*
-// vector×ªjson
+// vectorè½¬json
 json vector_to_json(const vector<vector<string>>& data)
 {
 	// {
@@ -24,7 +25,7 @@ json vector_to_json(const vector<vector<string>>& data)
 }*/
 
 /*
-// Éú³É´íÎóĞÅÏ¢µÄ json ¶ÔÏó
+// ç”Ÿæˆé”™è¯¯ä¿¡æ¯çš„ json å¯¹è±¡
 json error_to_json(const string& type, const string& content, const string& code)
 {
 	json j;
@@ -37,8 +38,8 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 {
 	string _return;
 	/*
-	* query -get [DB] [LS] -ALL²éÑ¯Ä³¿âÀïµÄÄ³±íËùÓĞÊı¾İ
-	* query -info »ñÈ¡ËùÓĞÊı¾İ¿âĞÅÏ¢£¬Êı¾İ¿âĞÅÏ¢°üÀ¨ Êı¾İ¿âÃû³Æ¡¢Ëùº¬ÁĞ±í
+	* query -get [DB] [LS] -ALLæŸ¥è¯¢æŸåº“é‡Œçš„æŸè¡¨æ‰€æœ‰æ•°æ®
+	* query -info è·å–æ‰€æœ‰æ•°æ®åº“ä¿¡æ¯ï¼Œæ•°æ®åº“ä¿¡æ¯åŒ…æ‹¬ æ•°æ®åº“åç§°ã€æ‰€å«åˆ—è¡¨
 	*/
 	
 	if (_tokens.size() == 2 && _tokens[1] == "-info") {
@@ -76,13 +77,13 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 		if (_mode == "-get")
 		{
 			/*
-			* query -get [DB][LS] -R [ROW] ²éÄ³ĞĞ
-			* query -get [DB][LS] -Rt [ROW] [ROW]²éÄ³ĞĞµ½Ä³ĞĞ
-			* query -get [DB][LS] -R [ROW] [ROW] [ROW] ... ²éÄ³ĞĞºÍÄ³ĞĞºÍÄ³ĞĞºÍ...
+			* query -get [DB][LS] -R [ROW] æŸ¥æŸè¡Œ
+			* query -get [DB][LS] -Rt [ROW] [ROW]æŸ¥æŸè¡Œåˆ°æŸè¡Œ
+			* query -get [DB][LS] -R [ROW] [ROW] [ROW] ... æŸ¥æŸè¡Œå’ŒæŸè¡Œå’ŒæŸè¡Œå’Œ...
 			*/
 			if (_op == "-R" || _op == "-Rt" || _op == "Rh")
 			{
-				if (_tokens.size() == 6)  // ²éÄ³ĞĞ
+				if (_tokens.size() == 6)  // æŸ¥æŸè¡Œ
 				{
 					int row;
 					try
@@ -91,7 +92,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					}
 					catch (const invalid_argument&)
 					{
-						json j = hint_to_json("error", "²ÎÊı´íÎó", "1");
+						json j = hint_to_json("error", "å‚æ•°é”™è¯¯", "1");
 						_return = j.dump(-1);
 						return;
 					}
@@ -101,7 +102,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					json j = vector_to_json({ head,result }, "data");
 					_return = j.dump(-1);
 				}
-				else if (_tokens.size() == 7 && _tokens[5] == "-Rt")  // ²éÄ³ĞĞµ½Ä³ĞĞ
+				else if (_tokens.size() == 7 && _tokens[5] == "-Rt")  // æŸ¥æŸè¡Œåˆ°æŸè¡Œ
 				{
 					int start_row, end_row;
 					try
@@ -111,7 +112,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					}
 					catch (const invalid_argument&)
 					{
-						json j = hint_to_json("error", "²ÎÊı´íÎó", "1");
+						json j = hint_to_json("error", "å‚æ•°é”™è¯¯", "1");
 						_return = j.dump(-1);
 						return;
 					}
@@ -126,7 +127,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					json j = vector_to_json(result, "data");
 					_return = j.dump(-1);
 				}
-				else  // ²éÄ³¼¸ĞĞ
+				else  // æŸ¥æŸå‡ è¡Œ
 				{
 					vector<int> rows;
 					for (size_t i = 5; i < _tokens.size(); i++)
@@ -138,7 +139,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 						}
 						catch (const invalid_argument&)
 						{
-							json j = hint_to_json("error", "²ÎÊı´íÎó", "1");
+							json j = hint_to_json("error", "å‚æ•°é”™è¯¯", "1");
 							_return = j.dump(-1);
 							return;
 						}
@@ -154,13 +155,13 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 				}
 			}
 			/*
-			* query -get [DB] [LS] -C [COW] ²éÄ³ÁĞ
-			* query -get [DB] [LS] -Ct [COW] [COW] ²éÄ³ÁĞµ½Ä³ÁĞ
-			* query -get [DB] [LS] -C [COW] [COW] [COW] ... ²éÄ³¼¸ÁĞ£¨Í¬²éĞĞ²Ù×÷£©
+			* query -get [DB] [LS] -C [COW] æŸ¥æŸåˆ—
+			* query -get [DB] [LS] -Ct [COW] [COW] æŸ¥æŸåˆ—åˆ°æŸåˆ—
+			* query -get [DB] [LS] -C [COW] [COW] [COW] ... æŸ¥æŸå‡ åˆ—ï¼ˆåŒæŸ¥è¡Œæ“ä½œï¼‰
 			*/
 			else if (_op == "-C")
 			{
-				if (_tokens.size() == 6)  // ²éÄ³ÁĞ
+				if (_tokens.size() == 6)  // æŸ¥æŸåˆ—
 				{
 					int col;
 					try
@@ -169,7 +170,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					}
 					catch (const invalid_argument&)
 					{
-						json j = hint_to_json("error", "²ÎÊı´íÎó", "1");
+						json j = hint_to_json("error", "å‚æ•°é”™è¯¯", "1");
 						_return = j.dump(-1);
 						return;
 					}
@@ -178,13 +179,13 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					for (int i = 0; i < query.size(); i++) {
 						result.push_back(vector<string>{ query[i] });
 					}
-					string head = _db.query_head(_db_name, _ls_name)[col];//È¡Í·
+					string head = _db.query_head(_db_name, _ls_name)[col];//å–å¤´
 					result.insert(result.begin(), vector<string>{ head });
 
 					json j = vector_to_json({ result }, "data");
 					_return = j.dump(-1);
 				}
-				else if (_tokens.size() == 7 && _tokens[5] == "-Ct")  // ²éÄ³ÁĞµ½Ä³ÁĞ
+				else if (_tokens.size() == 7 && _tokens[5] == "-Ct")  // æŸ¥æŸåˆ—åˆ°æŸåˆ—
 				{
 					int start_col, end_col;
 					try
@@ -194,7 +195,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					}
 					catch (const invalid_argument&)
 					{
-						json j = hint_to_json("error", "²ÎÊı´íÎó", "1");
+						json j = hint_to_json("error", "å‚æ•°é”™è¯¯", "1");
 						_return = j.dump(-1);
 						return;
 					}
@@ -212,7 +213,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 					json j = vector_to_json(result, "data");
 					_return = j.dump(-1);
 				}
-				else  // ²éÄ³¼¸ÁĞ
+				else  // æŸ¥æŸå‡ åˆ—
 				{
 					vector<int> cols;
 					vector<string> head;
@@ -225,7 +226,7 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 						}
 						catch (const invalid_argument&)
 						{
-							json j = hint_to_json("error", "²ÎÊı´íÎó", "1");
+							json j = hint_to_json("error", "å‚æ•°é”™è¯¯", "1");
 							_return = j.dump(-1);
 							return;
 						}
@@ -251,8 +252,8 @@ void Cmd_Query::execute(DB_server& _db, std::vector<std::string>& _tokens)
 			}
 		}
 		/*
-		* query -get [DB] [LS] -Q [head] [string] ²éÕÒÄ³ÁĞ±íÀï£¬ÔÚ head ÁĞÏÂ£¬Êı¾İÎª string µÄËùÓĞĞĞµÄÊı¾İ
-		* query -where [DB] [LS] -Q [head] [string] ²éÕÒÄ³ÁĞ±íÀï£¬ÔÚ head ÁĞÏÂ£¬Êı¾İÎª string µÄËùÓĞĞĞµÄĞĞºÅ
+		* query -get [DB] [LS] -Q [head] [string] æŸ¥æ‰¾æŸåˆ—è¡¨é‡Œï¼Œåœ¨ head åˆ—ä¸‹ï¼Œæ•°æ®ä¸º string çš„æ‰€æœ‰è¡Œçš„æ•°æ®
+		* query -where [DB] [LS] -Q [head] [string] æŸ¥æ‰¾æŸåˆ—è¡¨é‡Œï¼Œåœ¨ head åˆ—ä¸‹ï¼Œæ•°æ®ä¸º string çš„æ‰€æœ‰è¡Œçš„è¡Œå·
 		*/
 		else if (_mode == "-where")
 		{

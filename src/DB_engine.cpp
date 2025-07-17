@@ -1,7 +1,8 @@
-#include "DB_engine.h"
+ï»¿#include "DB_engine.h"
+using namespace std;
 
 /*
-* DB_LISTµÄÊµÏÖ
+* DB_LISTçš„å®ç°
 */
 
 vector<string> split(const string& str, char delimiter) {
@@ -197,7 +198,7 @@ bool DB_LIST::set(int row_index, int column_index, const string& value) {
 }
 
 /*
-* LIST_CONFIGµÄÊµÏÖ
+* LIST_CONFIGçš„å®ç°
 */
 LIST_CONFIG::LIST_CONFIG(string name)
 {
@@ -206,7 +207,7 @@ LIST_CONFIG::LIST_CONFIG(string name)
 }
 
 /*
-* DB_CONFIGµÄÊµÏÖ
+* DB_CONFIGçš„å®ç°
 */
 
 DB_CONFIG::DB_CONFIG(string db_name)
@@ -225,7 +226,7 @@ void DB_CONFIG::set_name(string db_name)
 }
 
 /*
-* DB_engineµÄÊµÏÖ
+* DB_engineçš„å®ç°
 */
 
 DB_engine::DB_engine(string DB_path)
@@ -261,10 +262,10 @@ bool DB_engine::load_DB(string DB_path)
 	json j;
 	file >> j;
 
-	//¶ÁÈ¡Êı¾İ¿âÅäÖÃ
+	//è¯»å–æ•°æ®åº“é…ç½®
 	_db_config = DB_CONFIG(j["config"]["db_name"]);
 
-	//¶ÁÈ¡ÁĞ±í
+	//è¯»å–åˆ—è¡¨
 	for (const auto& item : j["list"])
 	{
 		LIST_CONFIG list_config(item["name"]);
@@ -325,7 +326,7 @@ bool DB_engine::save_DB(string DB_path)
 	return true;
 }
 
-//ÔİÊ±Ã»ÓÃÉÏ£¬ÊµÏÖÄÚÈİÓësave_DBÒ»Ñù
+//æš‚æ—¶æ²¡ç”¨ä¸Šï¼Œå®ç°å†…å®¹ä¸save_DBä¸€æ ·
 bool DB_engine::create_cf(string DB_path)
 {
 	if (DB_path == "default") DB_path = _db_path;
@@ -358,12 +359,12 @@ void DB_engine::add_List(DB_LIST& ad_list)
 	//LIST_CONFIG new_list_config = ad_list.get_cf();
 	int new_uid = _List.size();
 
-	//¼ì²éÊÇ·ñÖØ¸´
+	//æ£€æŸ¥æ˜¯å¦é‡å¤
 	auto it = std::find_if(_List.begin(), _List.end(), [&](LIST_CONFIG& lc) {
 		return lc.get_name() == ad_list.get_name();
 		});
 	if (it != _List.end()) {
-		//±ÈÈçËµ£¬ÒÑ¾­´æÔÚ±í¡°test¡±£¬´ËÊ±¾Í»á½«Æä¸Ä±äÎª¡°test_2¡±
+		//æ¯”å¦‚è¯´ï¼Œå·²ç»å­˜åœ¨è¡¨â€œtestâ€ï¼Œæ­¤æ—¶å°±ä¼šå°†å…¶æ”¹å˜ä¸ºâ€œtest_2â€
 		ad_list.set_name(ad_list.get_name() + "_" + to_string(new_uid));
 	}
 
@@ -383,7 +384,7 @@ bool DB_engine::del_List(int uid)
 		return false;
 	}
 
-	//¼ì²éÉ¾³ıµÄ±íÊÇ·ñÕıÔÚÊ¹ÓÃ
+	//æ£€æŸ¥åˆ é™¤çš„è¡¨æ˜¯å¦æ­£åœ¨ä½¿ç”¨
 	std::string ls_name = _List[uid].get_name();
 	for (const auto& entry : _ls_map)
 	{
@@ -394,7 +395,7 @@ bool DB_engine::del_List(int uid)
 		}
 	}
 
-	//É¾³ıÎÄ¼ş
+	//åˆ é™¤æ–‡ä»¶
 	string list_path = _db_path + "/" + _List[uid].get_name() + ".txt";
 	if (remove(list_path.c_str()) != 0)
 	{
@@ -402,7 +403,7 @@ bool DB_engine::del_List(int uid)
 		throw string("Delete_Failed");
 	}
 
-	//²Á³ıÒ»¸ölist config
+	//æ“¦é™¤ä¸€ä¸ªlist config
 	_List.erase(_List.begin() + uid);
 
 	return true;
@@ -418,7 +419,7 @@ bool DB_engine::del_List(string del_name)
 		return false;
 	}
 
-	//¼ì²éÉ¾³ıµÄ±íÊÇ·ñÕıÔÚÊ¹ÓÃ
+	//æ£€æŸ¥åˆ é™¤çš„è¡¨æ˜¯å¦æ­£åœ¨ä½¿ç”¨
 	for (const auto& entry : _ls_map)
 	{
 		if (entry.second->get_name() == del_name)
@@ -435,7 +436,7 @@ bool DB_engine::del_List(string del_name)
 		throw string("Delete_Failed");
 	}
 
-	//²Á³ıÒ»¸ölist config
+	//æ“¦é™¤ä¸€ä¸ªlist config
 	_List.erase(it);
 
 	return true;
@@ -451,12 +452,12 @@ DB_LIST* DB_engine::select_list(int uid)
 	thread::id this_id = std::this_thread::get_id();
 	if (_ls_map.find(this_id) == _ls_map.end())
 	{
-		// Èç¹ûµ±Ç°Ïß³ÌµÄ DB_LIST ÊµÀı²»´æÔÚ£¬Ôò´´½¨Ò»¸öĞÂÊµÀı
+		// å¦‚æœå½“å‰çº¿ç¨‹çš„ DB_LIST å®ä¾‹ä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªæ–°å®ä¾‹
 		_ls_map[this_id] = new DB_LIST(_List[uid]);
 	}
 	else
 	{
-		// Èç¹ûµ±Ç°Ïß³ÌµÄ DB_LIST ÊµÀıÒÑ´æÔÚ£¬ÔòÏÈ¹Ø±ÕËü£¬È»ºó´´½¨Ò»¸öĞÂÊµÀı
+		// å¦‚æœå½“å‰çº¿ç¨‹çš„ DB_LIST å®ä¾‹å·²å­˜åœ¨ï¼Œåˆ™å…ˆå…³é—­å®ƒï¼Œç„¶ååˆ›å»ºä¸€ä¸ªæ–°å®ä¾‹
 		close_list();
 		_ls_map[this_id] = new DB_LIST(_List[uid]);
 	}
@@ -479,12 +480,12 @@ DB_LIST* DB_engine::select_list(string name)
 	thread::id this_id = std::this_thread::get_id();
 	if (_ls_map.find(this_id) == _ls_map.end())
 	{
-		// Èç¹ûµ±Ç°Ïß³ÌµÄ DB_LIST ÊµÀı²»´æÔÚ£¬Ôò´´½¨Ò»¸öĞÂÊµÀı
+		// å¦‚æœå½“å‰çº¿ç¨‹çš„ DB_LIST å®ä¾‹ä¸å­˜åœ¨ï¼Œåˆ™åˆ›å»ºä¸€ä¸ªæ–°å®ä¾‹
 		_ls_map[this_id] = new DB_LIST(*it);
 	}
 	else
 	{
-		// Èç¹ûµ±Ç°Ïß³ÌµÄ DB_LIST ÊµÀıÒÑ´æÔÚ£¬ÔòÏÈ¹Ø±ÕËü£¬È»ºó´´½¨Ò»¸öĞÂÊµÀı
+		// å¦‚æœå½“å‰çº¿ç¨‹çš„ DB_LIST å®ä¾‹å·²å­˜åœ¨ï¼Œåˆ™å…ˆå…³é—­å®ƒï¼Œç„¶ååˆ›å»ºä¸€ä¸ªæ–°å®ä¾‹
 		close_list();
 		_ls_map[this_id] = new DB_LIST(*it);
 	}

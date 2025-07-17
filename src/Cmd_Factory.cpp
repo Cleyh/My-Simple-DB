@@ -1,6 +1,7 @@
-#include "Cmd_Factory.h"
+﻿#include "Cmd_Factory.h"
 #include "Cmd_sys.h"
 #include "Cmd_Query.h"
+using namespace std;
 
 unique_ptr<Cmd> Cmd_Factory::create_Cmd(DB_server& db, vector<string>& tokens)
 {

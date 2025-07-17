@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Cmd.h"
 class Cmd_Query :
     public Cmd
