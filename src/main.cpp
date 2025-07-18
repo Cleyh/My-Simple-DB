@@ -4,7 +4,7 @@ using namespace std;
 int main() 
 {
 	try {
-		DB_server db_server("C:/Users/unbd_/Desktop/dbin");
+		DB_server db_server("../../example-dbin");
 		//db_server.start_network_server(6565);
 		//run on: http://127.0.0.1:6565
 		char a;
