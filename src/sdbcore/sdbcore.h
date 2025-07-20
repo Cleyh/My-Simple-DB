@@ -1,6 +1,6 @@
 #pragma once
 
-class sdbcore 
+class SDbCore 
 {
 
 };
